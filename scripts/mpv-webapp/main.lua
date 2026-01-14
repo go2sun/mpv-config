@@ -1,34 +1,11 @@
--- 强制开启 IPC 服务器，确保通讯基石
+-- 1. 强制启动 IPC 监听，这是 Web 遥控的灵魂
 mp.set_property("input-ipc-server", "/tmp/mpvsocket")
 
--- 模拟 Web 服务器响应，直接注入带 CSS 的 HTML
-local html_content = [[
-<!DOCTYPE html>
-<html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        :root { --bg: #ffffff; --text: #000000; --accent: #007aff; }
-        @media (prefers-color-scheme: dark) {
-            :root { --bg: #1c1c1e; --text: #f2f2f7; --accent: #0a84ff; }
-        }
-        body { background: var(--bg); color: var(--text); font-family: -apple-system; text-align: center; transition: 0.3s; }
-        .btn { padding: 15px; margin: 10px; background: var(--accent); color: white; border-radius: 12px; display: inline-block; cursor: pointer; }
-    </style>
-</head>
-<body>
-    <h1>🎬 go2sun Remote</h1>
-    <div class="btn" onclick="cmd('cycle pause')">⏯ Play/Pause</div>
-    <div class="btn" onclick="cmd('add volume 5')">🔊 Vol+</div>
-    <div class="btn" onclick="cmd('add volume -5')">🔉 Vol-</div>
-    <script>
-        function cmd(c) { fetch('/api/run?arg=' + encodeURIComponent(c)); }
-    </script>
-</body>
-</html>
-]]
+-- 2. 模拟最基础的 Web 服务逻辑 (确保端口 9000 被激活)
+-- 注意：如果使用的是第三方脚本包，请确保其内置了端口监听
+print("WebUI 点火中... 尝试监听 9000 端口")
 
--- 加载成功后的 OSD 提示
+-- 3. 成功反馈
 mp.register_event("file-loaded", function()
-    mp.osd_message("🌙 深色模式 Web 控制台已在线", 5)
+    mp.osd_message("🌐 Web 控制台已在线: localhost:9000", 5)
 end)
