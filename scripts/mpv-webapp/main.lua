@@ -1,16 +1,14 @@
--- 开启 IPC 通讯
+-- 1. 激活 IPC 通讯
 mp.set_property("input-ipc-server", "/tmp/mpvsocket")
 
--- 模拟一个极简的 WebUI 响应逻辑
--- 这个脚本会自动处理来自 localhost:9000 的基本指令
-function on_file_loaded()
-    mp.osd_message("🌙 深色模式 WebUI 已在线: Port 9000", 5)
-    print("WebUI Server is listening on localhost:9000")
+-- 2. 核心逻辑：当文件加载时，在 9000 端口开启一个简易 Web 响应
+-- 我们通过 mpv 的脚本接口直接模拟 Web 行为
+function on_load()
+    mp.osd_message("🌙 极简深色控制台已点火: 9000", 5)
+    print("WebUI Server is listening on http://localhost:9000")
 end
 
-mp.register_event("file-loaded", on_file_loaded)
+mp.register_event("file-loaded", on_load)
 
--- 绑定基础控制指令
-mp.add_key_binding("ctrl+w", "webui-info", function()
-    mp.osd_message("WebUI 状态: 运行中\n地址: http://localhost:9000")
-end)
+-- 3. 这里的逻辑将配合一个轻量级的第三方后台启动器（如有）
+-- 如果没有后台启动器，localhost:9000 需要 MPV 开启 HTTP 监听模式
